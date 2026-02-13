@@ -9,13 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #04050a;
-      --card: rgba(7, 10, 22, 0.68);
-      --line: rgba(255, 255, 255, 0.12);
-      --text: #f2f4ff;
-      --muted: #d2d8ea;
+      --bg: #03040a;
+      --card: rgba(8, 12, 30, 0.72);
+      --line: rgba(255, 255, 255, 0.24);
+      --text: #f8f9ff;
+      --muted: #dde3f2;
       --pink: #ff4f90;
       --blue: #7ce8ff;
+      --gold: #ffd27e;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -23,7 +24,10 @@
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background: radial-gradient(circle at 18% 8%, #11162e 0, #050711 45%, #03040a 100%);
+      background:
+        radial-gradient(circle at 15% 12%, #1c2350 0, rgba(18, 24, 56, 0.8) 30%, transparent 60%),
+        radial-gradient(circle at 84% 9%, #3a0f2d 0, rgba(42, 12, 34, 0.75) 28%, transparent 56%),
+        linear-gradient(160deg, #050816 0%, #03040a 55%, #020209 100%);
       color: var(--text);
       font-family: "Space Grotesk", system-ui, sans-serif;
     }
@@ -31,6 +35,22 @@
       position: fixed;
       inset: 0;
       z-index: 0;
+    }
+    .scene-glow {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 76%, rgba(124, 232, 255, 0.12), transparent 38%),
+        radial-gradient(circle at 80% 18%, rgba(255, 79, 144, 0.16), transparent 42%),
+        radial-gradient(circle at 50% 48%, rgba(255, 210, 126, 0.06), transparent 45%);
+      mix-blend-mode: screen;
+      animation: auraShift 12s ease-in-out infinite alternate;
+    }
+    @keyframes auraShift {
+      from { opacity: 0.72; transform: translateY(-6px) scale(1); }
+      to { opacity: 1; transform: translateY(8px) scale(1.03); }
     }
     .panel {
       position: fixed;
@@ -40,9 +60,12 @@
       max-width: min(500px, calc(100vw - 32px));
       padding: 14px 16px;
       border-radius: 14px;
-      background: var(--card);
+      background: linear-gradient(140deg, rgba(16, 20, 42, 0.9), rgba(9, 12, 30, 0.78));
       border: 1px solid var(--line);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.36);
+      box-shadow:
+        0 18px 38px rgba(0, 0, 0, 0.42),
+        0 0 35px rgba(255, 79, 144, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
       backdrop-filter: blur(10px);
     }
     .tag {
@@ -55,8 +78,9 @@
       font-weight: 700;
       letter-spacing: 0.4px;
       text-transform: uppercase;
-      color: #ffd8e9;
-      background: rgba(255, 79, 144, 0.18);
+      color: #fff5fa;
+      background: linear-gradient(120deg, rgba(255, 79, 144, 0.4), rgba(124, 232, 255, 0.2));
+      box-shadow: 0 0 18px rgba(255, 79, 144, 0.24);
       margin-bottom: 8px;
     }
     .panel h1 {
@@ -64,6 +88,11 @@
       font-size: clamp(24px, 4.5vw, 36px);
       line-height: 1.1;
       letter-spacing: 0.3px;
+      background: linear-gradient(140deg, #ffffff 0%, #ffd7e8 45%, #8cecff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.18);
     }
     .panel p {
       margin: 8px 0 0;
@@ -78,12 +107,13 @@
       z-index: 4;
       border-radius: 999px;
       padding: 8px 12px;
-      background: var(--card);
+      background: linear-gradient(120deg, rgba(13, 18, 40, 0.9), rgba(10, 14, 34, 0.74));
       border: 1px solid var(--line);
-      color: #ffd7e8;
+      color: #ffe8f2;
       font-size: 12px;
       letter-spacing: 0.3px;
       backdrop-filter: blur(8px);
+      box-shadow: 0 0 16px rgba(124, 232, 255, 0.2);
     }
     .actions {
       position: fixed;
@@ -95,9 +125,9 @@
       gap: 8px;
       padding: 10px 12px;
       border-radius: 12px;
-      background: var(--card);
+      background: linear-gradient(120deg, rgba(12, 18, 42, 0.9), rgba(12, 16, 36, 0.75));
       border: 1px solid var(--line);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.36);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.36), 0 0 20px rgba(255, 79, 144, 0.18);
       backdrop-filter: blur(10px);
     }
     .actions button {
@@ -107,13 +137,13 @@
       font-family: inherit;
       font-size: 12px;
       color: #fff;
-      background: rgba(255, 255, 255, 0.1);
+      background: linear-gradient(120deg, rgba(255, 79, 144, 0.32), rgba(124, 232, 255, 0.16));
       cursor: pointer;
       transition: transform 0.15s ease, background 0.2s ease;
     }
     .actions button:hover {
       transform: translateY(-1px);
-      background: rgba(255, 79, 144, 0.24);
+      background: linear-gradient(120deg, rgba(255, 79, 144, 0.46), rgba(124, 232, 255, 0.2));
     }
     .dot {
       width: 9px;
@@ -135,10 +165,11 @@
       border-radius: 12px;
       padding: 8px 11px;
       font-size: 12px;
-      color: #ffd7e8;
-      background: rgba(0, 0, 0, 0.6);
+      color: #ffe8f2;
+      background: rgba(5, 8, 22, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.13);
       backdrop-filter: blur(8px);
+      box-shadow: 0 0 16px rgba(124, 232, 255, 0.12);
     }
     @media (max-width: 760px) {
       .hint { display: none; }
@@ -150,23 +181,23 @@
 </head>
 <body>
   <div id="scene"></div>
-
+  <div class="scene-glow"></div>
   <section class="panel">
     <div class="tag">Love Universe</div>
-    <h1>CHÀO MỪNG ĐẾN VŨ TRỤ TỈNH YÊU CỦA ANH.IM FINE.</h1>
-    <p>chồng đưa em tới vũ trụ của chúng ta rồi nha , mình cùng ngắm kỷ niệm của chúng minh nhé em yêu .</p>
+    <h1>CHAO MUNG DEN VU TRU TINH YEU</h1>
+    <p>Anh dua em toi vu tru cua chung ta roi ne. Minh cung ngam lai nhung ky niem dep nhat nha em yeu.</p>
   </section>
 
   <div class="hint">Drag de xoay - Scroll de zoom</div>
 
   <div class="actions">
     <span class="dot"></span>
-    <button id="musicToggle">BẬT NHẠC</button>
-    <button id="backBtn">QuaY LẠI</button>
+    <button id="musicToggle">BAT NHAC</button>
+    <button id="backBtn">QUAY LAI</button>
     <audio id="bgMusic" loop preload="auto"></audio>
   </div>
 
-  <div id="status">ĐANG TẢI TÌNH YÊU VŨ TRỤ...</div>
+  <div id="status">DANG TAI VU TRU...</div>
 
   <script>
     const statusBox = document.getElementById("status");
@@ -219,7 +250,7 @@
     }
 
     function setMusicButton(playing) {
-      musicToggle.textContent = playing ? "Tat nhac" : "Bat nhac";
+      musicToggle.textContent = playing ? "🔊 TAT NHAC" : "🎵 BAT NHAC";
     }
 
     function applyMusicSource(index) {
@@ -259,7 +290,7 @@
     });
 
     document.getElementById("backBtn").addEventListener("click", () => {
-      window.location.href = "index1.html";
+      window.location.href = "index.html";
     });
 
     applyMusicSource(0);
@@ -287,7 +318,7 @@
       statusBox.textContent = "Dang khoi tao...";
 
       const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x02030a, 0.002);
+      scene.fog = new THREE.FogExp2(0x02040d, 0.00155);
 
       const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
       camera.position.set(0, 45, 228);
@@ -295,7 +326,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.4 : 1.8));
-      renderer.setClearColor(0x04050a, 1);
+      renderer.setClearColor(0x03050f, 1);
       document.getElementById("scene").appendChild(renderer.domElement);
 
       const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -303,21 +334,42 @@
       controls.autoRotate = true;
       controls.autoRotateSpeed = 0.5;
 
-      scene.add(new THREE.AmbientLight(0xffb6d4, 0.34));
-      const centerLight = new THREE.PointLight(0xff4f90, 1.5, 600);
+      scene.add(new THREE.AmbientLight(0xffd6eb, 0.5));
+      const centerLight = new THREE.PointLight(0xff5ca6, 2.05, 760);
       centerLight.position.set(0, 0, 0);
       scene.add(centerLight);
+      const sideLightA = new THREE.PointLight(0x7ce8ff, 0.85, 980);
+      sideLightA.position.set(190, 140, 260);
+      scene.add(sideLightA);
+      const sideLightB = new THREE.PointLight(0xff8bbd, 0.72, 980);
+      sideLightB.position.set(-210, -100, -180);
+      scene.add(sideLightB);
 
       const core = createCoreParticles(isMobile ? 10000 : 16000, 40);
       scene.add(core);
 
       const ringGroup = new THREE.Group();
       scene.add(ringGroup);
-      createRingCloud(isMobile ? 5200 : 9000, 72, 198, 34, ringGroup, "#ff8fb9", "#ffffff");
-      createRingCloud(isMobile ? 3800 : 7000, 58, 150, 16, ringGroup, "#ffd9ea", "#ffffff");
+      createRingCloud(isMobile ? 7800 : 13000, 72, 210, 38, ringGroup, "#ff6aa7", "#fff4fd");
+      createRingCloud(isMobile ? 6200 : 10500, 56, 165, 18, ringGroup, "#ffe9f4", "#9eeeff");
+      createRingCloud(isMobile ? 4200 : 7800, 105, 245, 46, ringGroup, "#8feaff", "#ffffff");
 
-      const stars = createStarField(isMobile ? 2500 : 4200, 900);
+      const stars = createStarField(
+        isMobile ? 4200 : 7800,
+        980,
+        "#dff6ff",
+        isMobile ? 1.0 : 1.25,
+        0.95
+      );
       scene.add(stars);
+      const starsFar = createStarField(
+        isMobile ? 1600 : 3200,
+        1400,
+        "#ffdff0",
+        isMobile ? 0.8 : 0.95,
+        0.55
+      );
+      scene.add(starsFar);
 
       const photos = new THREE.Group();
       scene.add(photos);
@@ -325,12 +377,13 @@
       const PHOTO_CLONES_PER_IMAGE = isMobile ? 5 : 8;
       photoList.forEach((src) => addPhoto(src, "", PHOTO_CLONES_PER_IMAGE));
 
-      const meteors = createMeteors(isMobile ? 12 : 22);
+      const meteors = createMeteors(isMobile ? 16 : 30);
 
       function createCoreParticles(count, radius) {
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
         const cHot = new THREE.Color("#ff2d2d");
+        const cMid = new THREE.Color("#ff8e8e");
         const cDark = new THREE.Color("#8d0f0f");
 
         for (let i = 0; i < count; i += 1) {
@@ -345,7 +398,7 @@
           positions[i * 3 + 1] = y;
           positions[i * 3 + 2] = z;
 
-          const mix = cHot.clone().lerp(cDark, (r / radius) * 0.58);
+          const mix = cHot.clone().lerp(cMid, Math.random() * 0.5).lerp(cDark, (r / radius) * 0.52);
           colors[i * 3] = mix.r;
           colors[i * 3 + 1] = mix.g;
           colors[i * 3 + 2] = mix.b;
@@ -355,9 +408,9 @@
         g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
         g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
         const m = new THREE.PointsMaterial({
-          size: isMobile ? 1.05 : 1.2,
+          size: isMobile ? 1.2 : 1.45,
           transparent: true,
-          opacity: 0.95,
+          opacity: 0.98,
           vertexColors: true,
           depthWrite: false,
           blending: THREE.AdditiveBlending
@@ -390,9 +443,9 @@
         g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
         g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
         const m = new THREE.PointsMaterial({
-          size: isMobile ? 1.12 : 1.35,
+          size: isMobile ? 1.28 : 1.65,
           transparent: true,
-          opacity: 0.9,
+          opacity: 0.97,
           depthWrite: false,
           vertexColors: true
         });
@@ -401,7 +454,7 @@
         target.add(points);
       }
 
-      function createStarField(count, distance) {
+      function createStarField(count, distance, colorHex, size, opacity) {
         const positions = new Float32Array(count * 3);
         for (let i = 0; i < count; i += 1) {
           positions[i * 3] = THREE.MathUtils.randFloatSpread(distance);
@@ -411,10 +464,10 @@
         const g = new THREE.BufferGeometry();
         g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
         const m = new THREE.PointsMaterial({
-          color: 0xffffff,
-          size: isMobile ? 0.9 : 1,
+          color: colorHex,
+          size: size,
           transparent: true,
-          opacity: 0.85,
+          opacity: opacity,
           depthWrite: false
         });
         return new THREE.Points(g, m);
@@ -488,9 +541,9 @@
           const head = new THREE.Mesh(
             new THREE.SphereGeometry(0.95, 10, 10),
             new THREE.MeshBasicMaterial({
-              color: 0x49dcff,
+              color: 0x4df0ff,
               transparent: true,
-              opacity: 0.9,
+              opacity: 0.95,
               blending: THREE.AdditiveBlending,
               depthWrite: false
             })
@@ -501,9 +554,9 @@
           const line = new THREE.Line(
             geo,
             new THREE.LineBasicMaterial({
-              color: 0x93f0ff,
+              color: 0x9ef6ff,
               transparent: true,
-              opacity: 0.68,
+              opacity: 0.8,
               blending: THREE.AdditiveBlending,
               depthWrite: false
             })
@@ -537,10 +590,13 @@
         const t = performance.now() * 0.001;
         const pulse = 1 + Math.sin(t * 2.5) * 0.032;
         core.scale.setScalar(pulse);
-        core.rotation.y += 0.0012;
-        ringGroup.rotation.y += 0.00085;
-        stars.rotation.y += 0.00016;
-        centerLight.intensity = 1.15 + (Math.sin(t * 2.5) + 1) * 0.25;
+        core.rotation.y += 0.00135;
+        ringGroup.rotation.y += 0.00105;
+        stars.rotation.y += 0.00022;
+        starsFar.rotation.y -= 0.00008;
+        centerLight.intensity = 1.55 + (Math.sin(t * 2.5) + 1) * 0.38;
+        sideLightA.intensity = 0.62 + (Math.sin(t * 1.8 + 0.6) + 1) * 0.24;
+        sideLightB.intensity = 0.54 + (Math.sin(t * 1.4 + 2.1) + 1) * 0.19;
         meteors.update();
 
         photos.children.forEach((mesh) => {
@@ -569,3 +625,4 @@
   </script>
 </body>
 </html>
+
