@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #04050a;
+      --card: rgba(7, 10, 22, 0.68);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f2f4ff;
+      --muted: #d2d8ea;
+      --pink: #ff4f90;
+      --blue: #7ce8ff;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at 18% 8%, #11162e 0, #050711 45%, #03040a 100%);
+      color: var(--text);
+      font-family: "Space Grotesk", system-ui, sans-serif;
+    }
+    #scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .panel {
+      position: fixed;
+      z-index: 4;
+      left: 16px;
+      top: 16px;
+      max-width: min(500px, calc(100vw - 32px));
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.36);
+      backdrop-filter: blur(10px);
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: #ffd8e9;
+      background: rgba(255, 79, 144, 0.18);
+      margin-bottom: 8px;
+    }
+    .panel h1 {
+      margin: 0;
+      font-size: clamp(24px, 4.5vw, 36px);
+      line-height: 1.1;
+      letter-spacing: 0.3px;
+    }
+    .panel p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: clamp(12px, 2vw, 14px);
+      line-height: 1.5;
+    }
+    .hint {
+      position: fixed;
+      right: 16px;
+      top: 16px;
+      z-index: 4;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: #ffd7e8;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(8px);
+    }
+    .actions {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.36);
+      backdrop-filter: blur(10px);
+    }
+    .actions button {
+      border: 0;
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-family: inherit;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+    .actions button:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 79, 144, 0.24);
+    }
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #45f2b4;
+      box-shadow: 0 0 10px #45f2b4;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.84); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+    #status {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      z-index: 5;
+      border-radius: 12px;
+      padding: 8px 11px;
+      font-size: 12px;
+      color: #ffd7e8;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      backdrop-filter: blur(8px);
+    }
+    @media (max-width: 760px) {
+      .hint { display: none; }
+      .panel { max-width: calc(100vw - 20px); left: 10px; top: 10px; }
+      .actions { right: 10px; bottom: 10px; }
+      #status { left: 10px; bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="scene"></div>
+
+  <section class="panel">
+    <div class="tag">Love Universe</div>
+    <h1>CHÀO MỪNG ĐẾN VŨ TRỤ TỈNH YÊU CỦA ANH.IM FINE.</h1>
+    <p>chồng đưa em tới vũ trụ của chúng ta rồi nha , mình cùng ngắm kỷ niệm của chúng minh nhé em yêu .</p>
+  </section>
+
+  <div class="hint">Drag de xoay - Scroll de zoom</div>
+
+  <div class="actions">
+    <span class="dot"></span>
+    <button id="musicToggle">BẬT NHẠC</button>
+    <button id="backBtn">QuaY LẠI</button>
+    <audio id="bgMusic" loop preload="auto"></audio>
+  </div>
+
+  <div id="status">ĐANG TẢI TÌNH YÊU VŨ TRỤ...</div>
+
+  <script>
+    const statusBox = document.getElementById("status");
+    const musicToggle = document.getElementById("musicToggle");
+    const bgMusic = document.getElementById("bgMusic");
+    const isMobile = window.innerWidth < 768;
+
+    const scriptChains = [
+      [
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js",
+        "https://unpkg.com/three@0.160.0/build/three.min.js"
+      ],
+      [
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js",
+        "https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js",
+        "./OrbitControls.js"
+      ]
+    ];
+
+    const musicSources = [
+      "https://files.catbox.moe/5iyzb4.mp3",
+      "https://files.catbox.moe/5iyzb4.mp3",
+      "https://cdn.pixabay.com/download/audio/2022/03/15/audio_2f48e5072e.mp3?filename=romantic-ambient-11268.mp3"
+    ];
+    const shouldAutoPlayMusic =
+      new URLSearchParams(window.location.search).get("autoplay") === "1" ||
+      sessionStorage.getItem("autoPlayUniverseMusic") === "1";
+    let musicSourceIndex = 0;
+
+    function loadWithFallback(urls, onDone, idx = 0) {
+      if (idx >= urls.length) {
+        statusBox.textContent = "Khong tai duoc thu vien 3D.";
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = urls[idx];
+      s.onload = onDone;
+      s.onerror = () => loadWithFallback(urls, onDone, idx + 1);
+      document.head.appendChild(s);
+    }
+
+    function boot() {
+      if (typeof THREE === "undefined") {
+        loadWithFallback(scriptChains[0], () => loadWithFallback(scriptChains[1], initUniverse));
+      } else if (typeof THREE.OrbitControls === "undefined") {
+        loadWithFallback(scriptChains[1], initUniverse);
+      } else {
+        initUniverse();
+      }
+    }
+
+    function setMusicButton(playing) {
+      musicToggle.textContent = playing ? "Tat nhac" : "Bat nhac";
+    }
+
+    function applyMusicSource(index) {
+      musicSourceIndex = index;
+      bgMusic.src = musicSources[index];
+      bgMusic.load();
+    }
+
+    bgMusic.addEventListener("error", () => {
+      if (musicSourceIndex < musicSources.length - 1) {
+        applyMusicSource(musicSourceIndex + 1);
+      }
+    });
+
+    bgMusic.addEventListener("canplaythrough", async () => {
+      if (!shouldAutoPlayMusic) return;
+      if (!bgMusic.paused) return;
+      try {
+        await bgMusic.play();
+        setMusicButton(true);
+      } catch (_) {
+        setMusicButton(false);
+      }
+    });
+
+    musicToggle.addEventListener("click", async () => {
+      if (!bgMusic.src) applyMusicSource(0);
+      if (bgMusic.paused) {
+        try {
+          await bgMusic.play();
+          setMusicButton(true);
+        } catch (_) {}
+      } else {
+        bgMusic.pause();
+        setMusicButton(false);
+      }
+    });
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "index1.html";
+    });
+
+    applyMusicSource(0);
+    setMusicButton(false);
+    if (shouldAutoPlayMusic) {
+      sessionStorage.removeItem("autoPlayUniverseMusic");
+      setTimeout(async () => {
+        try {
+          await bgMusic.play();
+          setMusicButton(true);
+        } catch (_) {
+          setMusicButton(false);
+        }
+      }, 160);
+      document.addEventListener("pointerdown", async () => {
+        if (!bgMusic.paused) return;
+        try {
+          await bgMusic.play();
+          setMusicButton(true);
+        } catch (_) {}
+      }, { once: true });
+    }
+
+    function initUniverse() {
+      statusBox.textContent = "Dang khoi tao...";
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x02030a, 0.002);
+
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+      camera.position.set(0, 45, 228);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.4 : 1.8));
+      renderer.setClearColor(0x04050a, 1);
+      document.getElementById("scene").appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.5;
+
+      scene.add(new THREE.AmbientLight(0xffb6d4, 0.34));
+      const centerLight = new THREE.PointLight(0xff4f90, 1.5, 600);
+      centerLight.position.set(0, 0, 0);
+      scene.add(centerLight);
+
+      const core = createCoreParticles(isMobile ? 10000 : 16000, 40);
+      scene.add(core);
+
+      const ringGroup = new THREE.Group();
+      scene.add(ringGroup);
+      createRingCloud(isMobile ? 5200 : 9000, 72, 198, 34, ringGroup, "#ff8fb9", "#ffffff");
+      createRingCloud(isMobile ? 3800 : 7000, 58, 150, 16, ringGroup, "#ffd9ea", "#ffffff");
+
+      const stars = createStarField(isMobile ? 2500 : 4200, 900);
+      scene.add(stars);
+
+      const photos = new THREE.Group();
+      scene.add(photos);
+      const photoList = Array.from({ length: 11 }, (_, i) => `anh${i + 1}.jpg`);
+      photoList.forEach((src) => addPhoto(src, "", 1));
+
+      const meteors = createMeteors(isMobile ? 12 : 22);
+
+      function createCoreParticles(count, radius) {
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+        const cHot = new THREE.Color("#ff2d2d");
+        const cDark = new THREE.Color("#8d0f0f");
+
+        for (let i = 0; i < count; i += 1) {
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          const r = radius * Math.cbrt(Math.random());
+          const x = r * Math.sin(phi) * Math.cos(theta);
+          const y = r * Math.sin(phi) * Math.sin(theta);
+          const z = r * Math.cos(phi);
+
+          positions[i * 3] = x;
+          positions[i * 3 + 1] = y;
+          positions[i * 3 + 2] = z;
+
+          const mix = cHot.clone().lerp(cDark, (r / radius) * 0.58);
+          colors[i * 3] = mix.r;
+          colors[i * 3 + 1] = mix.g;
+          colors[i * 3 + 2] = mix.b;
+        }
+
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        const m = new THREE.PointsMaterial({
+          size: isMobile ? 1.05 : 1.2,
+          transparent: true,
+          opacity: 0.95,
+          vertexColors: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending
+        });
+        return new THREE.Points(g, m);
+      }
+
+      function createRingCloud(count, rMin, rMax, thickness, target, c1Hex, c2Hex) {
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+        const c1 = new THREE.Color(c1Hex);
+        const c2 = new THREE.Color(c2Hex);
+
+        for (let i = 0; i < count; i += 1) {
+          const radius = THREE.MathUtils.randFloat(rMin, rMax);
+          const angle = Math.random() * Math.PI * 2;
+          const y = THREE.MathUtils.randFloatSpread(thickness);
+          positions[i * 3] = Math.cos(angle) * radius;
+          positions[i * 3 + 1] = y * 0.4;
+          positions[i * 3 + 2] = Math.sin(angle) * radius;
+
+          const t = (radius - rMin) / (rMax - rMin);
+          const mix = c1.clone().lerp(c2, t);
+          colors[i * 3] = mix.r;
+          colors[i * 3 + 1] = mix.g;
+          colors[i * 3 + 2] = mix.b;
+        }
+
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        const m = new THREE.PointsMaterial({
+          size: isMobile ? 1.12 : 1.35,
+          transparent: true,
+          opacity: 0.9,
+          depthWrite: false,
+          vertexColors: true
+        });
+        const points = new THREE.Points(g, m);
+        points.rotation.x = THREE.MathUtils.degToRad(12);
+        target.add(points);
+      }
+
+      function createStarField(count, distance) {
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count; i += 1) {
+          positions[i * 3] = THREE.MathUtils.randFloatSpread(distance);
+          positions[i * 3 + 1] = THREE.MathUtils.randFloatSpread(distance);
+          positions[i * 3 + 2] = THREE.MathUtils.randFloatSpread(distance);
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        const m = new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: isMobile ? 0.9 : 1,
+          transparent: true,
+          opacity: 0.85,
+          depthWrite: false
+        });
+        return new THREE.Points(g, m);
+      }
+
+      function addPhoto(src, fallback, count = 1) {
+        const loader = new THREE.TextureLoader();
+        if (loader.setCrossOrigin) loader.setCrossOrigin("anonymous");
+
+        const onTexture = (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          const g = new THREE.PlaneGeometry(isMobile ? 9 : 11, isMobile ? 9 : 11);
+          const m = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+          for (let i = 0; i < count; i += 1) {
+            const mesh = new THREE.Mesh(g, m);
+            randomizePhoto(mesh);
+            photos.add(mesh);
+          }
+        };
+
+        loader.load(src, onTexture, undefined, () => {
+          if (!fallback) return;
+          loader.load(fallback, onTexture, undefined, () => {});
+        });
+      }
+
+      function randomizePhoto(mesh) {
+        const radius = THREE.MathUtils.randFloat(95, 210);
+        const angle = Math.random() * Math.PI * 2;
+        const y = THREE.MathUtils.randFloatSpread(70);
+        mesh.position.set(Math.cos(angle) * radius, y, Math.sin(angle) * radius);
+        mesh.lookAt(0, 0, 0);
+        mesh.userData.radius = radius;
+        mesh.userData.angle = angle;
+        mesh.userData.speed = THREE.MathUtils.randFloat(0.0006, 0.0015);
+      }
+
+      function createMeteors(count) {
+        const result = [];
+        const baseDir = new THREE.Vector3(-1, -0.21, -0.1).normalize();
+
+        function reset(m) {
+          m.speed = THREE.MathUtils.randFloat(1.1, 2.2);
+          m.tail = THREE.MathUtils.randFloat(18, 34);
+          m.head.position.set(
+            THREE.MathUtils.randFloat(220, 760),
+            THREE.MathUtils.randFloat(160, 340),
+            THREE.MathUtils.randFloat(-320, 320)
+          );
+          m.dir.copy(baseDir);
+          m.dir.x += THREE.MathUtils.randFloat(-0.08, 0.08);
+          m.dir.y += THREE.MathUtils.randFloat(-0.04, 0.02);
+          m.dir.z += THREE.MathUtils.randFloat(-0.08, 0.08);
+          m.dir.normalize();
+          updateTrail(m);
+        }
+
+        function updateTrail(m) {
+          const p = m.head.position;
+          m.arr[0] = p.x;
+          m.arr[1] = p.y;
+          m.arr[2] = p.z;
+          m.arr[3] = p.x - m.dir.x * m.tail;
+          m.arr[4] = p.y - m.dir.y * m.tail;
+          m.arr[5] = p.z - m.dir.z * m.tail;
+          m.line.geometry.attributes.position.needsUpdate = true;
+        }
+
+        for (let i = 0; i < count; i += 1) {
+          const head = new THREE.Mesh(
+            new THREE.SphereGeometry(0.95, 10, 10),
+            new THREE.MeshBasicMaterial({
+              color: 0x49dcff,
+              transparent: true,
+              opacity: 0.9,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false
+            })
+          );
+          const arr = new Float32Array(6);
+          const geo = new THREE.BufferGeometry();
+          geo.setAttribute("position", new THREE.BufferAttribute(arr, 3));
+          const line = new THREE.Line(
+            geo,
+            new THREE.LineBasicMaterial({
+              color: 0x93f0ff,
+              transparent: true,
+              opacity: 0.68,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false
+            })
+          );
+          scene.add(head);
+          scene.add(line);
+          const meteor = { head, line, arr, dir: new THREE.Vector3(), tail: 22, speed: 1.4 };
+          reset(meteor);
+          meteor.head.position.addScaledVector(meteor.dir, -THREE.MathUtils.randFloat(0, 520));
+          result.push(meteor);
+        }
+
+        return {
+          update() {
+            for (let i = 0; i < result.length; i += 1) {
+              const m = result[i];
+              m.head.position.x += m.dir.x * m.speed;
+              m.head.position.y += m.dir.y * m.speed;
+              m.head.position.z += m.dir.z * m.speed;
+              updateTrail(m);
+              if (m.head.position.x < -780 || m.head.position.y < -130 || m.head.position.z < -520 || m.head.position.z > 520) {
+                reset(m);
+              }
+            }
+          }
+        };
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = performance.now() * 0.001;
+        const pulse = 1 + Math.sin(t * 2.5) * 0.032;
+        core.scale.setScalar(pulse);
+        core.rotation.y += 0.0012;
+        ringGroup.rotation.y += 0.00085;
+        stars.rotation.y += 0.00016;
+        centerLight.intensity = 1.15 + (Math.sin(t * 2.5) + 1) * 0.25;
+        meteors.update();
+
+        photos.children.forEach((mesh) => {
+          mesh.userData.angle += mesh.userData.speed;
+          const r = mesh.userData.radius;
+          mesh.position.x = Math.cos(mesh.userData.angle) * r;
+          mesh.position.z = Math.sin(mesh.userData.angle) * r;
+          mesh.lookAt(0, 0, 0);
+        });
+
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      statusBox.remove();
+    }
+
+    boot();
+  </script>
+</body>
+</html>
